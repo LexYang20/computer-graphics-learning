@@ -1,0 +1,102 @@
+// 4.26computer practise.cpp : 定义控制台应用程序的入口点。
+#include "stdafx.h"
+#include <iostream>
+#include <glut.h>
+#include <glaux.h>
+#include <math.h>
+using namespace std;
+float s=0;
+float e1=0,e2=0;
+float m1=0,m2=0,m3=0;
+
+void mykeyboard(unsigned char key,int x,int y)
+{
+		if(key==27)//esc退出
+		{
+			exit(0);
+		}
+}
+void myidle()
+{
+	Sleep(100);
+	
+	//变化变量
+	s+=1;
+	e1+=2;
+	e2+=2;
+	m1+=1;
+	m2+=1;
+	m3+=1;
+	glutPostRedisplay();
+}
+void display(void)
+{
+/* 清楚所有像素*/
+   glClear (GL_COLOR_BUFFER_BIT);
+
+   glMatrixMode(GL_MODELVIEW);//世界坐标系
+   glLoadIdentity();
+   
+glPushMatrix();
+	glColor3f(0.5,0,0);
+	glRotatef(s,0,0,1);
+	glutWireSphere(30,30,30);
+glPopMatrix();
+
+glPushMatrix();
+	glRotatef(e1,0,0,1);
+
+
+	glColor3f(0,0.4,0);
+	glTranslatef(50,0,0);
+	glRotatef(e2,1,0,0);
+	glutWireSphere(15,20,20);
+glPopMatrix();
+
+//绕太阳转动
+glPushMatrix();
+	glRotatef(m2,2,0,0);
+
+	//绕地球转动
+	glTranslatef(70,0,0);
+	glRotatef(m3,0,1,0);
+	glTranslatef(-70,0,0);
+
+	//自转
+	glColor3f(0,0.3,0);
+	glTranslatef(110,0,0);
+	glRotatef(m1,0,1,0);
+	glutWireSphere(10,20,20);
+
+glPopMatrix();
+
+/* 程序刷新*/
+   glFlush ();
+}
+
+void init (void) 
+{
+/* 设置清除颜色	*/
+   glClearColor (0.0, 0.0, 0.0, 0.0);
+
+/* 初始化视景体*/
+   glMatrixMode(GL_PROJECTION);
+   glLoadIdentity();
+   glOrtho(-100,100,-100,100,-50,50);
+}
+
+void main(void)
+{
+
+	glutInitDisplayMode (GLUT_SINGLE | GLUT_RGB);
+   glutInitWindowSize (1000,1000); 
+   glutInitWindowPosition (100, 100);
+   glutCreateWindow ("hello");
+
+   init ();
+   glutDisplayFunc(display); 
+   glutIdleFunc(myidle);
+   glutKeyboardFunc(mykeyboard);
+   glutMainLoop();
+	getchar();
+}

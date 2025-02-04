@@ -1,0 +1,98 @@
+#include "stdafx.h"
+#include <iostream>
+#include <glut.h>
+#include <glaux.h>
+#include <math.h>
+using namespace std;
+float theta=0;
+
+void mykeyboard(unsigned char key,int x,int y)
+{
+		if(key==27)//esc退出
+		{
+			exit(0);
+		}
+}
+void myidle()
+{
+	Sleep(100);
+
+	theta+=3;//旋转
+
+	if(theta>720)
+	{
+		theta-=720;
+	}
+	
+	
+	
+	//变化变量
+	glutPostRedisplay();
+}
+void display(void)
+{
+/* 清楚所有像素*/
+   glClear (GL_COLOR_BUFFER_BIT);
+
+   glMatrixMode(GL_MODELVIEW);//世界坐标系
+   glLoadIdentity();
+   
+glColor3f(1,0,0);
+glPointSize(5);
+glBegin(GL_POINTS);
+	glVertex2f(10,0);
+	glColor3f(0,1,0);
+	glVertex2f(-10,0);
+glEnd();
+
+glPushMatrix();
+	
+//设置转动 绕着(-20,10)
+
+glTranslatef(-20,10,0);
+glRotatef(theta,0,0,1);
+glTranslatef(20,-10,0);//(0,0,0)
+
+//画球体
+
+ //glRotatef(theta,0,0,1);//围绕圆心点转
+ glTranslatef(40,10,-30);
+ glColor3f(0.4,0.2,0.7);
+ glRotatef(theta,1,0,0);//自转
+ glutWireSphere(20,30,30);
+ //glTranslatef(40,10,-30);//这条语句在这就是中心点转了
+//glRotatef(theta,1,1,0);
+ glTranslatef(-40,-10,30);
+glPopMatrix();
+ 
+
+/* 程序刷新*/
+   glFlush ();
+}
+
+void init (void) 
+{
+/* 设置清除颜色	*/
+   glClearColor (0.0, 0.0, 0.0, 0.0);
+
+/* 初始化视景体*/
+   glMatrixMode(GL_PROJECTION);
+   glLoadIdentity();
+   glOrtho(-100,100,-100,100,-50,50);
+}
+
+void main(void)
+{
+
+	glutInitDisplayMode (GLUT_SINGLE | GLUT_RGB);
+   glutInitWindowSize (500, 500); 
+   glutInitWindowPosition (100, 100);
+   glutCreateWindow ("hello");
+
+   init ();
+   glutDisplayFunc(display); 
+   glutIdleFunc(myidle);
+   glutKeyboardFunc(mykeyboard);
+   glutMainLoop();
+	getchar();
+}
